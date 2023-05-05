@@ -10,11 +10,17 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\Football.Contracts\Football.Contracts.csproj" />
+      <ProjectReference Include="..\..\Shared\Kafka.Shared\Kafka.Shared.csproj" />
     </ItemGroup>
 </Project>

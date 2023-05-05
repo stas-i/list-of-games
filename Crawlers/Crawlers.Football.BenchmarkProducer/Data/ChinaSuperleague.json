@@ -1,0 +1,90 @@
+﻿[
+  {
+    "id": "f4453ea29b636004d20c0685d9c0f877",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-05T11:35:00Z",
+    "completed": false,
+    "home_team": "Henan Jianye FC",
+    "away_team": "Beijing Sinob  o Guoan FC",
+    "scores": null,
+    "last_update": null
+  },
+  {
+    "id": "698a42ce680528310cdf042d739373f0",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-05T11:35:00Z",
+    "completed": false,
+    "home_team": "Shenzhen FC",
+    "away_team": "Cangzhou Mighty Lions",
+    "scores": null,
+    "last_update": null
+  },
+  {
+    "id": "806001e32a735f45b5d662a171669c43",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-  05T11:35:00Z",
+    "completed": false,
+    "home_team": "Shanghai Greenland Shenhua FC",
+    "away_team": "Dalian Professional",
+    "scores": null,
+    "last_update": null
+  },
+  {
+    "id": "689f025d0baa04e328272b3425916228",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-05T11:35:00Z",
+    "completed": false,
+    "home_team": "Wuhan Three Towns",
+    "away_team": "Zhejiang",
+    "scores": null,
+    "last_update": null
+  },
+  {
+    "id": "28544d1e1092b3a2afeb4c4d4e4448bd",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-06T07:30:00Z",
+    "completed": false,
+    "home_team": "Meizhou Hakka",
+    "away_team": "Shandong Luneng Taishan FC",
+    "scores": null,
+    "last_update": null
+  },
+  {
+    "id": "ca207c1e336687371c085446aa04781d",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-06T11:35:00Z",
+    "completed": false,
+    "home_team": "Nantong Zhiyun FC",
+    "away_team": "Changchun Yatai",
+    "scores": null,
+    "last_update": null
+  },
+  {
+    "id": "1fd6c016566f1a924bb25de220a0dd8a",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-06T11:35:00Z",
+    "completed": false,
+    "home_team": "Chengdu Rongcheng FC",
+    "away_team": "Qingdao Hainiu FC",
+    "scores": null,
+    "last_update": null
+  },
+  {
+    "id": "1da9162a199de56c8d3613305ed85fe2",
+    "sport_key": "soccer_china_superleague",
+    "sport_title": "Super League - China",
+    "commence_time": "2023-05-06T11:35:00Z",
+    "completed": false,
+    "home_team": "Tianjin Jinmen Tiger FC",
+    "away_team": "Shanghai SIPG FC",
+    "scores": null,
+    "last_update": null
+  }
+]
