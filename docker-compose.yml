@@ -24,3 +24,33 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  azuresql:
+    container_name: azuresql
+    ports:
+      - "8001:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: yourStrong(!)Password99
+    # mssql server image isn't available for arm64 architecture, so we use azure-sql instead
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    # If you really want to use MS SQL Server, uncomment the following line
+    #image: mcr.microsoft.com/mssql/server
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P example_123 -Q 'SELECT 1' || exit 1" ]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+
+  db-migrations:
+    container_name: db-up
+    build:
+      context: .
+      dockerfile: ./DataWarehouse/DataWarehouse.DbMigrator/Dockerfile
+    depends_on:
+      - azuresql
+    environment:
+      DB_CONNECTION: "Server=azuresql;User Id=SA;Password=yourStrong(!)Password99;Database=warehouse_database;TrustServerCertificate=True;"
+    restart: on-failure

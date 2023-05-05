@@ -1,5 +1,5 @@
 ﻿namespace DataWarehouse.Entities.Football;
 
-public class Class1
+public class MatchesEntity
 {
 }
