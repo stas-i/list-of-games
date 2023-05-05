@@ -1,11 +1,17 @@
+using DataWarehouse.Data.Football;
+using DataWarehouse.Data.Football.Commands;
 using DataWarehouse.Writers.Football;
-using DataWarehouse.Writers.Football.Commands;
+using Kafka.Shared;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        services.AddSingleton<IDapperCommandExecutor, DapperCommandExecutor>();
-        services.AddHostedService<Worker>();
+        services.AddOptions<FootballMatchesConsumerSettingsOptions>()
+            .BindConfiguration(FootballMatchesConsumerSettingsOptions.FootballMatchesConsumerSettings);
+        services.AddSingleton<IDapperExecutor, DapperExecutor>();
+        services.RegisterKafka();
+        services.AddTopics();
+        services.AddHostedService<FootballMatchesConsumer>();
     })
     .Build();
 

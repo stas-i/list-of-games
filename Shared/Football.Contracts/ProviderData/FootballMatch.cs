@@ -1,4 +1,4 @@
-﻿namespace Football.Contracts;
+﻿namespace Football.Contracts.ProviderData;
 
 public class FootballMatch
 {
@@ -8,5 +8,6 @@ public class FootballMatch
     public TimeOnly StartTimeUtc { get; set; }
     public string HomeTeam { get; set; } = string.Empty;
     public string AwayTeam { get; set; } = string.Empty;
+    public string CompetitionName { get; set; } = string.Empty;
 }
 

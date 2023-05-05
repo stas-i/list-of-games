@@ -8,6 +8,7 @@ public static class ServiceCollectionsExtensions
     {
         services.AddOptions<KafkaOptions>().BindConfiguration(KafkaOptions.Kafka);
         services.AddSingleton<IKafkaProducerFactory, KafkaProducerFactory>();
+        services.AddSingleton<IKafkaConsumerFactory, KafkaConsumerFactory>();
     }
 
     public static void AddTopics(this IServiceCollection services)

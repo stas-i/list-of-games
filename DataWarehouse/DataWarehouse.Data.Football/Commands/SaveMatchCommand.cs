@@ -1,8 +1,6 @@
-﻿using Football.Contracts;
+﻿namespace DataWarehouse.Data.Football.Commands;
 
-namespace DataWarehouse.Writers.Football.Commands;
-
-public class SaveMatchCommand : IDapperCommand
+public class SaveMatchCommand : IDapperCommand<MergeMatchOutput>
 {
     public string Sql =>
         @"MERGE dbo.Matches WITH (SERIALIZABLE) AS Existing
@@ -40,7 +38,8 @@ WHEN NOT MATCHED THEN
             Incoming.HomeTeam,
             Incoming.AwayTeam,
             GETUTCDATE(),
-            GETUTCDATE());";
+            GETUTCDATE())
+OUTPUT $action as Action, DELETED.Code as UpdatedItemCode;";
 
     public object Params =>
         new
@@ -63,4 +62,10 @@ WHEN NOT MATCHED THEN
     public required  string HomeTeam { get; init; }
     public required  string AwayTeam { get; init; }
     public int TimeDiffInMinutes { get; init; } = 120;
+}
+
+public class MergeMatchOutput
+{
+    public string Action { get; set; }
+    public string? UpdatedItemCode { get; set; }
 }

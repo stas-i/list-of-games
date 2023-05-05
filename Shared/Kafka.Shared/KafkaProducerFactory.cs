@@ -12,14 +12,14 @@ public class KafkaProducerFactory : IKafkaProducerFactory
         _options = options;
     }
 
-    public IProducer<string, string> CreateProducer()
+    public IProducer<string, byte[]> CreateProducer()
     {
         var config = new ProducerConfig { BootstrapServers = _options.Value.BootstrapServers };
-        return new ProducerBuilder<string, string>(config).Build();
+        return new ProducerBuilder<string, byte[]>(config).Build();
     }
 }
 
 public interface IKafkaProducerFactory
 {
-    IProducer<string, string> CreateProducer();
+    IProducer<string, byte[]> CreateProducer();
 }

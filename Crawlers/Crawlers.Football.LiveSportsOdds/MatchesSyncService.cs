@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Confluent.Kafka;
 using Football.Contracts;
+using Football.Contracts.ProviderData;
 using Kafka.Shared;
 using Microsoft.Extensions.Options;
 
@@ -13,10 +14,6 @@ public class MatchesSyncService
     private readonly IOptions<LiveSportsOddsOptions> _options;
     private readonly ILogger<MatchesSyncService> _logger;
     private const string Provider = "LiveSportsOdds";
-
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new()
-    {
-    };
 
     public MatchesSyncService(
         IHttpClientFactory httpClientFactory,
@@ -39,10 +36,10 @@ public class MatchesSyncService
             response.EnsureSuccessStatusCode();
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             using var producer = _producerFactory.CreateProducer();
-            var records = JsonSerializer.DeserializeAsyncEnumerable<ScoresRecord>(stream, _jsonSerializerOptions, cancellationToken);
+            var records = JsonSerializer.DeserializeAsyncEnumerable<ScoresRecord>(stream, cancellationToken: cancellationToken);
             await foreach (var record in records.WithCancellation(cancellationToken))
             {
-                await PublishData(cancellationToken, record, producer, config);
+                await PublishData(record, producer, config, cancellationToken);
             }
         }
         catch (Exception e)
@@ -69,8 +66,12 @@ public class MatchesSyncService
         return client.SendAsync(request, cancellationToken);
     }
 
-    private static async Task PublishData(CancellationToken cancellationToken, ScoresRecord? record, IProducer<string, string> producer,
-        LiveSportsOddsOptions config)
+    private static async Task PublishData(
+        ScoresRecord? record,
+        IProducer<string, byte[]> producer,
+        LiveSportsOddsOptions config,
+    CancellationToken cancellationToken
+        )
     {
         if (record is null)
         {
@@ -84,13 +85,14 @@ public class MatchesSyncService
             HomeTeam = record.HomeTeam,
             AwayTeam = record.AwayTeam,
             StartDate = DateOnly.FromDateTime(record.CommenceTime),
-            StartTimeUtc = TimeOnly.FromDateTime(record.CommenceTime)
+            StartTimeUtc = TimeOnly.FromDateTime(record.CommenceTime),
+            CompetitionName = record.SportTitle
         };
 
-        var message = new Message<string, string>
+        var message = new Message<string, byte[]>
         {
             Key = mapped.ProviderId,
-            Value = JsonSerializer.Serialize(mapped)
+            Value = JsonSerializer.SerializeToUtf8Bytes(mapped)
         };
 
         // Note: Awaiting the asynchronous produce request below prevents flow of execution
