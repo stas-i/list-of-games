@@ -11,6 +11,7 @@ public class MatchesConsumer : BackgroundService
 {
     private readonly IConsumer<string, byte[]> _consumer;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<MatchesConsumer> _logger;
     private readonly string _warehouseUri;
     private readonly DataService _dataService;
     private readonly IOptions<MatchesConsumerOptions> _consumerOptions;
@@ -20,12 +21,14 @@ public class MatchesConsumer : BackgroundService
         DataService dataService,
         IOptions<MatchesConsumerOptions> consumerOptions,
         IConfiguration configuration,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        ILogger<MatchesConsumer> logger)
     {
         _consumer = consumerFactory.CreateConsumer(consumerOptions.Value);
         _dataService = dataService;
         _consumerOptions = consumerOptions;
         _httpClientFactory = httpClientFactory;
+        _logger = logger;
         _warehouseUri = configuration["ApiHosts:WarehouseApi"] ?? "https://localhost:7263";
     }
 
@@ -44,9 +47,8 @@ public class MatchesConsumer : BackgroundService
             {
                 var consumeResult = _consumer.Consume(cancellationToken);
                 await SaveData(consumeResult, cancellationToken);
+                _logger.LogDebug("Received message at {Offset}: {Key}", consumeResult.TopicPartitionOffset, consumeResult.Message.Key);
 
-                Console.WriteLine(
-                    $"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
 
                 // Store the offset associated with consumeResult to a local cache. Stored offsets are committed to Kafka by a background thread every AutoCommitIntervalMs.
                 // The offset stored is actually the offset of the consumeResult + 1 since by convention, committed offsets specify the next message to consume.
@@ -61,7 +63,7 @@ public class MatchesConsumer : BackgroundService
             catch (ConsumeException e)
             {
                 // Consumer errors should generally be ignored (or logged) unless fatal.
-                Console.WriteLine($"Consume error: {e.Error.Reason}");
+                _logger.LogError(e, "Consume error");
 
                 if (e.Error.IsFatal)
                 {
@@ -71,8 +73,7 @@ public class MatchesConsumer : BackgroundService
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Unexpected error: {e}");
-                break;
+                _logger.LogError(e,"Unexpected error");
             }
         }
     }

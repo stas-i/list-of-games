@@ -16,19 +16,22 @@ public class FootballMatchesConsumer : BackgroundService
     private readonly IDapperExecutor _executor;
     private readonly IOptions<FootballMatchesConsumerSettingsOptions> _consumerOptions;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<FootballMatchesConsumer> _logger;
 
     public FootballMatchesConsumer(
         IKafkaConsumerFactory consumerFactory,
         IKafkaProducerFactory kafkaProducerFactory,
         IDapperExecutor executor,
         IOptions<FootballMatchesConsumerSettingsOptions> consumerOptions,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILogger<FootballMatchesConsumer> logger)
     {
         _consumer = consumerFactory.CreateConsumer(consumerOptions.Value);
         _kafkaProducerFactory = kafkaProducerFactory;
         _executor = executor;
         _consumerOptions = consumerOptions;
         _configuration = configuration;
+        _logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -49,9 +52,7 @@ public class FootballMatchesConsumer : BackgroundService
                 var consumeResult = _consumer.Consume(cancellationToken);
                 var matchCode = await SaveData(consumeResult, cancellationToken);
                 await FanOutEvent(sinkEventsTopic, sinksEventsProducer, matchCode, cancellationToken);
-
-                Console.WriteLine(
-                    $"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
+                _logger.LogDebug("Received message at {Offset}: {Key}", consumeResult.TopicPartitionOffset, consumeResult.Message.Key);
 
                 // Store the offset associated with consumeResult to a local cache. Stored offsets are committed to Kafka by a background thread every AutoCommitIntervalMs.
                 // The offset stored is actually the offset of the consumeResult + 1 since by convention, committed offsets specify the next message to consume.
@@ -66,18 +67,18 @@ public class FootballMatchesConsumer : BackgroundService
             catch (ConsumeException e)
             {
                 // Consumer errors should generally be ignored (or logged) unless fatal.
-                Console.WriteLine($"Consume error: {e.Error.Reason}");
+                _logger.LogError(e, "Consume error");
 
                 if (e.Error.IsFatal)
                 {
                     // https://github.com/edenhill/librdkafka/blob/master/INTRODUCTION.md#fatal-consumer-errors
                     break;
+
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Unexpected error: {e}");
-                break;
+                _logger.LogError(e,"Unexpected error");
             }
         }
     }
@@ -104,9 +105,15 @@ public class FootballMatchesConsumer : BackgroundService
             SportType = "Football",
         };
 
-        var output = await _executor.QuerySingle(command, cancellationToken);
+        var output = await _executor.QueryAsync(command, cancellationToken);
+        if (output.Count != 1)
+        {
+            // BUG: If we have match 1 with teams X and Y  at 19:00 and same teams play at 22:00 and then
+            // third match comes with start time 20:30 (less than two hours to both matches). Query updates both matches :(
+            _logger.LogError("Three or more matches for same teams {@Output} - {Input}", output, command.Code);
+        }
 
-        var code = output.UpdatedItemCode ?? command.Code;
+        var code = output.FirstOrDefault()?.UpdatedItemCode ?? command.Code;
         return code;
     }
 

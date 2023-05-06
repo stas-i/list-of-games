@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Football.Contracts", "Share
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Shared", "Shared\Kafka.Shared\Kafka.Shared.csproj", "{13BF3788-30D3-436A-A099-248DF5854B5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawlers.Football.BenchmarkProducer", "Crawlers\Crawlers.Football.BenchmarkProducer\Crawlers.Football.BenchmarkProducer.csproj", "{C6C67C47-3CFD-424F-9C01-4CF7B21066E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawlers.Football.RandomDataProducer", "Crawlers\Crawlers.Football.RandomDataProducer\Crawlers.Football.RandomDataProducer.csproj", "{C6C67C47-3CFD-424F-9C01-4CF7B21066E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSinks.Api.Football", "DataSinks\DataSinks.Api.Football\DataSinks.Api.Football.csproj", "{892CD052-83AE-44E9-9700-6A0B8066A539}"
 EndProject

@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[Matches] (
-    Code char(32) NOT NULL PRIMARY KEY,
+    Code char(32) NOT NULL UNIQUE PRIMARY KEY,
     StartDate DATE NOT NULL,
     StartTime TIME NOT NULL,
     SportType nvarchar(64) NOT NULL,
