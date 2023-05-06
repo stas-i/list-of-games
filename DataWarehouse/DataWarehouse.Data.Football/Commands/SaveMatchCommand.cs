@@ -66,6 +66,6 @@ OUTPUT $action as Action, DELETED.Code as UpdatedItemCode;";
 
 public class MergeMatchOutput
 {
-    public string Action { get; set; }
+    public string Action { get; set; } = string.Empty;
     public string? UpdatedItemCode { get; set; }
 }

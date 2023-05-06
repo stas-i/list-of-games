@@ -5,13 +5,13 @@ namespace Crawlers.Football.LiveSportsOdds;
 public record ScoresRecord
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [JsonPropertyName("sport_key")]
-    public string SportKey { get; set; }
+    public string SportKey { get; set; } = string.Empty;
 
     [JsonPropertyName("sport_title")]
-    public string SportTitle { get; set; }
+    public string SportTitle { get; set; } = string.Empty;
 
     [JsonPropertyName("commence_time")]
     public DateTime CommenceTime { get; set; }
@@ -20,10 +20,10 @@ public record ScoresRecord
     public bool Completed { get; set; }
 
     [JsonPropertyName("home_team")]
-    public string HomeTeam { get; set; }
+    public string HomeTeam { get; set; } = string.Empty;
 
     [JsonPropertyName("away_team")]
-    public string AwayTeam { get; set; }
+    public string AwayTeam { get; set; } = string.Empty;
 
     // [JsonPropertyName("scores")]
     // public string? Scores { get; set; }

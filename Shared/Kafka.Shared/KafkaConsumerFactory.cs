@@ -78,6 +78,6 @@ public interface IKafkaConsumerFactory
 
 public class ConsumerSettings
 {
-    public string TopicName { get; set; }
-    public string GroupId { get; set; }
+    public string TopicName { get; set; } = string.Empty;
+    public string GroupId { get; set; } = string.Empty;
 }
