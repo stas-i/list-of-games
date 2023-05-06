@@ -30,7 +30,7 @@ public class DataService
             result = _matchesCollection.Find(_ => true);
         }
 
-        return await result.SortByDescending(x => x.StartDateUtc).ToListAsync(cancellationToken);
+        return await result.SortByDescending(x => x.StartDateUtc).Limit(filter.Limit).ToListAsync(cancellationToken);
     }
 
 
@@ -65,4 +65,5 @@ public class Match
 public class MatchesFilter
 {
     public string? Team { get; set; }
+    public int Limit = 100;
 }

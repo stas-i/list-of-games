@@ -19,8 +19,8 @@ ON Existing.CompetitionName = Incoming.CompetitionName AND
    ABS(DATEDIFF(minute, Existing.StartTime, Incoming.StartTime)) < @TimeDiffInMinutes
 WHEN MATCHED THEN
     UPDATE
-    SET Existing.UpdatedAt = GETUTCDATE(),
-        Existing.StartTime = Incoming.StartTime
+    SET Existing.UpdatedAt = GETUTCDATE()
+        --Not sure from business perspective what to do here ,Existing.StartTime = Incoming.StartTime
 WHEN NOT MATCHED THEN
     INSERT (Code,
             StartDate,
