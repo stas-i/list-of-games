@@ -143,7 +143,7 @@ public class FootballMatchesConsumer : BackgroundService
         return $"FTB-MAT-{match.StartDate:O}-{match.HomeTeam[..3]}-{match.AwayTeam[..3]}-{match.StartTimeUtc:t}".PadRight(32,'-');
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         _consumer.Close(); // Commit offsets and leave the group cleanly.
         _consumer.Dispose();

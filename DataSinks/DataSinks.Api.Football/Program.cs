@@ -1,7 +1,16 @@
+using DataSinks.Api.Football;
+using Kafka.Shared;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.Configure<MongoOptions>(builder.Configuration.GetSection(MongoOptions.SectionName));
+builder.Services.Configure<MatchesConsumerOptions>(builder.Configuration.GetSection(MatchesConsumerOptions.SectionName));
+builder.Services.AddSingleton<DataService>();
+builder.Services.AddHostedService<MatchesConsumer>();
+builder.Services.RegisterKafka();
+builder.Services.AddTopics();
+builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
